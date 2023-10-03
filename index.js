@@ -41,10 +41,10 @@ const buildPalette = (colorsList) => {
         complementaryContainer.appendChild(complementaryElement);
       }
     }
-  };
+};
   
   //  Convert each pixel value ( number ) to hexadecimal ( string ) with base 16
-  const rgbToHex = (pixel) => {
+const rgbToHex = (pixel) => {
     const componentToHex = (c) => {
       const hex = c.toString(16);
       return hex.length == 1 ? "0" + hex : hex;
@@ -56,14 +56,12 @@ const buildPalette = (colorsList) => {
       componentToHex(pixel.g) +
       componentToHex(pixel.b)
     ).toUpperCase();
-  };
+};
   
   /**
    * Convert HSL to Hex
-   * this entire formula can be found in stackoverflow, credits to @icl7126 !!!
-   * https://stackoverflow.com/a/44134328/17150245
    */
-  const hslToHex = (hslColor) => {
+const hslToHex = (hslColor) => {
     const hslColorCopy = { ...hslColor };
     hslColorCopy.l /= 100;
     const a =
@@ -76,14 +74,12 @@ const buildPalette = (colorsList) => {
         .padStart(2, "0");
     };
     return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
-  };
+};
   
   /**
    * Convert RGB values to HSL
-   * This formula can be
-   * found here https://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/
    */
-  const convertRGBtoHSL = (rgbValues) => {
+const convertRGBtoHSL = (rgbValues) => {
     return rgbValues.map((pixel) => {
       let hue,
         saturation,
@@ -140,14 +136,12 @@ const buildPalette = (colorsList) => {
         l: parseFloat(luminance * 100).toFixed(2),
       };
     });
-  };
+};
   
   /**
    * Using relative luminance we order the brightness of the colors
-   * the fixed values and further explanation about this topic
-   * can be found here -> https://en.wikipedia.org/wiki/Luma_(video)
    */
-  const orderByLuminance = (rgbValues) => {
+const orderByLuminance = (rgbValues) => {
     const calculateLuminance = (p) => {
       return 0.2126 * p.r + 0.7152 * p.g + 0.0722 * p.b;
     };
@@ -155,9 +149,9 @@ const buildPalette = (colorsList) => {
     return rgbValues.sort((p1, p2) => {
       return calculateLuminance(p2) - calculateLuminance(p1);
     });
-  };
+};
   
-  const buildRgb = (imageData) => {
+const buildRgb = (imageData) => {
     const rgbValues = [];
     // note that we are loopin every 4!
     // for every Red, Green, Blue and Alpha
@@ -172,25 +166,21 @@ const buildPalette = (colorsList) => {
     }
   
     return rgbValues;
-  };
+};
   
   /**
    * Calculate the color distance or difference between 2 colors
-   *
-   * further explanation of this topic
-   * can be found here -> https://en.wikipedia.org/wiki/Euclidean_distance
-   * note: this method is not accuarate for better results use Delta-E distance metric.
    */
-  const calculateColorDifference = (color1, color2) => {
+const calculateColorDifference = (color1, color2) => {
     const rDifference = Math.pow(color2.r - color1.r, 2);
     const gDifference = Math.pow(color2.g - color1.g, 2);
     const bDifference = Math.pow(color2.b - color1.b, 2);
   
     return rDifference + gDifference + bDifference;
-  };
+};
   
   // returns what color channel has the biggest difference
-  const findBiggestColorRange = (rgbValues) => {
+const findBiggestColorRange = (rgbValues) => {
     /**
      * Min is initialized to the maximum value posible
      * from there we procced to find the minimum value for that color channel
@@ -229,13 +219,12 @@ const buildPalette = (colorsList) => {
     } else {
       return "b";
     }
-  };
+};
   
   /**
    * Median cut implementation
-   * can be found here -> https://en.wikipedia.org/wiki/Median_cut
    */
-  const quantization = (rgbValues, depth) => {
+const quantization = (rgbValues, depth) => {
     const MAX_DEPTH = 4;
   
     // Base case
@@ -279,9 +268,9 @@ const buildPalette = (colorsList) => {
       ...quantization(rgbValues.slice(0, mid), depth + 1),
       ...quantization(rgbValues.slice(mid + 1), depth + 1),
     ];
-  };
+};
   
-  const main = () => {
+const main = () => {
     const imgFile = document.getElementById("imgfile");
     const image = new Image();
     const file = imgFile.files[0];
@@ -321,10 +310,7 @@ const buildPalette = (colorsList) => {
       image.src = fileReader.result;
     };
     fileReader.readAsDataURL(file);
-  };
+};
   
   main();
-
-
-
   
